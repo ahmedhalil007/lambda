@@ -1,0 +1,24 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmedhalil007/lambda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahmedhalil007/lambda/issues"
+  },
+  "homepage": "https://github.com/ahmedhalil007/lambda#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.377.0",
+    "@aws-sdk/util-dynamodb": "^3.377.0",
+    "serverless-iam-roles-per-function": "^3.2.0"
+  }
+}
