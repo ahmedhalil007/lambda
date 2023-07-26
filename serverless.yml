@@ -72,7 +72,7 @@ functions:
           - "dynamodb:DeleteItem"
         Resource: !GetAtt ProductsTable.Arn
   getAllProducts:
-    handler: api.getAllProductss
+    handler: api.getAllProducts
     name: get-all-products
     memorySize: 128 # mb
     timeout: 5 # seconds
