@@ -8,7 +8,7 @@ const {
 } = require("@aws-sdk/client-dynamodb");
 const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 
-const getPost = async (event) => {
+const getProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
@@ -20,7 +20,7 @@ const getPost = async (event) => {
 
         console.log({ Item });
         response.body = JSON.stringify({
-            message: "Successfully retrieved post.",
+            message: "Successfully retrieved product.",
             data: (Item) ? unmarshall(Item) : {},
             rawData: Item,
         });
@@ -28,7 +28,7 @@ const getPost = async (event) => {
         console.error(e);
         response.statusCode = 500;
         response.body = JSON.stringify({
-            message: "Failed to get post.",
+            message: "Failed to get product.",
             errorMsg: e.message,
             errorStack: e.stack,
         });
@@ -37,7 +37,7 @@ const getPost = async (event) => {
     return response;
 };
 
-const createPost = async (event) => {
+const createProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
@@ -49,14 +49,14 @@ const createPost = async (event) => {
         const createResult = await db.send(new PutItemCommand(params));
 
         response.body = JSON.stringify({
-            message: "Successfully created post.",
+            message: "Successfully created product.",
             createResult,
         });
     } catch (e) {
         console.error(e);
         response.statusCode = 500;
         response.body = JSON.stringify({
-            message: "Failed to create post.",
+            message: "Failed to create product.",
             errorMsg: e.message,
             errorStack: e.stack,
         });
@@ -65,7 +65,7 @@ const createPost = async (event) => {
     return response;
 };
 
-const updatePost = async (event) => {
+const updateProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
@@ -87,14 +87,14 @@ const updatePost = async (event) => {
         const updateResult = await db.send(new UpdateItemCommand(params));
 
         response.body = JSON.stringify({
-            message: "Successfully updated post.",
+            message: "Successfully updated product.",
             updateResult,
         });
     } catch (e) {
         console.error(e);
         response.statusCode = 500;
         response.body = JSON.stringify({
-            message: "Failed to update post.",
+            message: "Failed to update product.",
             errorMsg: e.message,
             errorStack: e.stack,
         });
@@ -103,7 +103,7 @@ const updatePost = async (event) => {
     return response;
 };
 
-const deletePost = async (event) => {
+const deleteProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
@@ -114,14 +114,14 @@ const deletePost = async (event) => {
         const deleteResult = await db.send(new DeleteItemCommand(params));
 
         response.body = JSON.stringify({
-            message: "Successfully deleted post.",
+            message: "Successfully deleted product.",
             deleteResult,
         });
     } catch (e) {
         console.error(e);
         response.statusCode = 500;
         response.body = JSON.stringify({
-            message: "Failed to delete post.",
+            message: "Failed to delete product.",
             errorMsg: e.message,
             errorStack: e.stack,
         });
@@ -130,14 +130,14 @@ const deletePost = async (event) => {
     return response;
 };
 
-const getAllPosts = async () => {
+const getAllProducts = async () => {
     const response = { statusCode: 200 };
 
     try {
         const { Items } = await db.send(new ScanCommand({ TableName: process.env.DYNAMODB_TABLE_NAME }));
 
         response.body = JSON.stringify({
-            message: "Successfully retrieved all posts.",
+            message: "Successfully retrieved all products.",
             data: Items.map((item) => unmarshall(item)),
             Items,
         });
@@ -145,7 +145,7 @@ const getAllPosts = async () => {
         console.error(e);
         response.statusCode = 500;
         response.body = JSON.stringify({
-            message: "Failed to retrieve posts.",
+            message: "Failed to retrieve products.",
             errorMsg: e.message,
             errorStack: e.stack,
         });
@@ -155,9 +155,9 @@ const getAllPosts = async () => {
 };
 
 module.exports = {
-    getPost,
-    createPost,
-    updatePost,
-    deletePost,
-    getAllPosts,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
 };
