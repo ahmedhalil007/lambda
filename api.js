@@ -143,9 +143,18 @@ const getAllProducts = async () => {
     try {
         const { Items } = await db.send(new ScanCommand({ TableName: process.env.DYNAMODB_TABLE_NAME }));
 
+        const orderedProducts = Items.map((item) => {
+            const { productId, title, description, price } = unmarshall(item);
+            return {
+                productId,
+                title,
+                description,
+                price,
+            };
+        });
         response.body = JSON.stringify({
             message: "Successfully retrieved all products.",
-            data: Items.map((item) => unmarshall(item)),
+            data: orderedProducts,
             Items,
         });
     } catch (e) {
