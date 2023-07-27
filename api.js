@@ -19,9 +19,16 @@ const getProduct = async (event) => {
         const { Item } = await db.send(new GetItemCommand(params));
 
         console.log({ Item });
+        const { productId, title, description, price } = unmarshall(Item);
+        const orderedProduct = {
+            productId,
+            title,
+            description,
+            price,
+        };
         response.body = JSON.stringify({
             message: "Successfully retrieved product.",
-            data: (Item) ? unmarshall(Item) : {},
+            data: orderedProduct,
             rawData: Item,
         });
     } catch (e) {

@@ -1,10 +1,10 @@
-service: dynamodb-crud-api
+service: dynamoDB-api
 
 provider:
   name: aws
   runtime: nodejs18.x
   stage: dev
-  region: us-west-1
+  region: us-east-1
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.productsTableName}
 
