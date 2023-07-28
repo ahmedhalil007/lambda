@@ -17,7 +17,7 @@ plugins:
 functions:
   getProduct:
     handler: api.getProduct
-    name: get-product
+    name: halilovic-get-product
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
@@ -31,7 +31,7 @@ functions:
         Resource: !GetAtt ProductsTable.Arn
   createProduct:
     handler: api.createProduct
-    name: create-product
+    name: halilovic-create-product
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
@@ -45,7 +45,7 @@ functions:
         Resource: !GetAtt ProductsTable.Arn
   updateProduct:
     handler: api.updateProduct
-    name: update-product
+    name: halilovic-update-product
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
@@ -59,7 +59,7 @@ functions:
         Resource: !GetAtt ProductsTable.Arn
   deleteProduct:
     handler: api.deleteProduct
-    name: delete-product
+    name: halilovic-delete-product
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
@@ -73,7 +73,7 @@ functions:
         Resource: !GetAtt ProductsTable.Arn
   getAllProducts:
     handler: api.getAllProducts
-    name: get-all-products
+    name: halilovic-get-all-products
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
