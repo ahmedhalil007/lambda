@@ -8,7 +8,7 @@ jobs:
   deploy:
     name: deploy
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -18,10 +18,10 @@ jobs:
         path: '**/node_modules'
         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-    - name: Use Node.js 16.x
-      uses: actions/setup-node@v2
+    - name: Use Node.js 18.12.1
+      uses: actions/setup-node@v1
       with:
-        node-version: 16.x
+        node-version: 18.12.1
 
     - name: Install dependencies
       run: yarn install
