@@ -1,4 +1,4 @@
-name: DynamoDB API
+name: halilovic-DynamoDB-API
 
 on:
   push:

@@ -1,4 +1,4 @@
-service: dynamoDB-api
+service: halilovic-dynamoDB-api
 
 provider:
   name: aws
@@ -9,7 +9,7 @@ provider:
     DYNAMODB_TABLE_NAME: ${self:custom.productsTableName}
 
 custom:
-  productsTableName: products-table-${self:provider.stage}
+  productsTableName: halilovic-products-table-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
@@ -22,7 +22,7 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: product/{productId}
+          path: halilovic-product/{productId}
           method: GET
     iamRoleStatements:
       - Effect: "Allow"
@@ -36,7 +36,7 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: product
+          path: halilovic-product
           method: POST
     iamRoleStatements:
       - Effect: "Allow"
@@ -50,7 +50,7 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: product/{productId}
+          path: halilovic-product/{productId}
           method: PUT
     iamRoleStatements:
       - Effect: "Allow"
@@ -64,7 +64,7 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: product/{productId}
+          path: halilovic-product/{productId}
           method: DELETE
     iamRoleStatements:
       - Effect: "Allow"
@@ -78,7 +78,7 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: products
+          path: halilovic-products
           method: GET
     iamRoleStatements:
       - Effect: "Allow"
