@@ -29,7 +29,6 @@ const getProduct = async (event) => {
         // Perform currency conversion if the "currency" query parameter is present
         if (currency) {
             try {
-                
                 const forexApiUrl = `https://api.fastforex.io/convert?api_key=54518be503-59af10a10f-ryii2r&from=EUR&to=${currency}&amount=${price}`;
                 const forexResponse = await axios.get(forexApiUrl);
                 const convertedPrice = parseFloat(forexResponse.data.result);
@@ -62,6 +61,7 @@ const getProduct = async (event) => {
                     response.body = JSON.stringify({
                         message: "Failed to convert currency.",
                         errorMsg: "Invalid conversion result.",
+                        rawData: Item,
                     });
                 }
             } catch (error) {
@@ -71,6 +71,7 @@ const getProduct = async (event) => {
                     message: "Failed to convert currency.",
                     errorMsg: error.message,
                     errorStack: error.stack,
+                    rawData: Item,
                 });
             }
         } else {
