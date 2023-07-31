@@ -32,29 +32,18 @@ const getProduct = async (event) => {
                 // Replace "YOUR_FOREX_API_KEY" with your actual API key from the Forex API provider
                 const forexApiUrl = `https://api.fastforex.io/convert?api_key=54518be503-59af10a10f-ryii2r&from=EUR&to=${currency}&amount=${price}`;
                 const forexResponse = await axios.get(forexApiUrl);
-                const convertedPrice = parseFloat(forexResponse.data.result);
+                const convertedPrice = forexResponse.data.result;
 
-                if (!isNaN(convertedPrice)) {
-                    response.body = JSON.stringify({
-                        message: "Successfully retrieved product.",
-                        data: {
-                            productId,
-                            title,
-                            description,
-                            price: {
-                                [currency]: convertedPrice,
-                                rate: forexResponse.data.rate,
-                            },
-                        },
-                        rawData: Item,
-                    });
-                } else {
-                    response.statusCode = 500;
-                    response.body = JSON.stringify({
-                        message: "Failed to convert currency.",
-                        errorMsg: "Invalid conversion result.",
-                    });
-                }
+                response.body = JSON.stringify({
+                    message: "Successfully retrieved product.",
+                    data: {
+                        productId,
+                        title,
+                        description,
+                        price: convertedPrice,
+                    },
+                    rawData: Item,
+                });
             } catch (error) {
                 console.error(error);
                 response.statusCode = 500;
@@ -89,7 +78,6 @@ const getProduct = async (event) => {
 
     return response;
 };
-
 
 const createProduct = async (event) => {
     const response = { statusCode: 200 };
