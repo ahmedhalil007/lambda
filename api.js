@@ -12,29 +12,19 @@ const getProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
-        const { productId } = event.pathParameters;
-        const { currency = 'EUR' } = event.queryStringParameters || {}; // Set default currency to 'EUR'
-
         const params = {
             TableName: process.env.DYNAMODB_TABLE_NAME,
-            Key: marshall({ productId }),
+            Key: marshall({ productId: event.pathParameters.productId }),
         };
         const { Item } = await db.send(new GetItemCommand(params));
 
         console.log({ Item });
-        const { title, description, price } = unmarshall(Item);
-
-        // Fetch currency exchange rate using the FastForex API
-        const apiKey = '54518be503-59af10a10f-ryii2r'; // Replace with your actual FastForex API key
-        const exchangeRateResponse = await axios.get(`https://api.fastforex.io/convert?from=EUR&to=${currency}&amount=${price}&apikey=${apiKey}`);
-        const convertedPrice = exchangeRateResponse.data.result;
-
+        const { productId, title, description, price } = unmarshall(Item);
         const orderedProduct = {
             productId,
             title,
             description,
-            price: convertedPrice,
-            currency, // Add the user-specified currency information to the response
+            price,
         };
         response.body = JSON.stringify({
             message: "Successfully retrieved product.",
@@ -54,21 +44,14 @@ const getProduct = async (event) => {
     return response;
 };
 
-
 const createProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
         const body = JSON.parse(event.body);
-        const { title, description, price, currency = 'EUR' } = body;
-        const numericPrice = parseFloat(price);
         const params = {
             TableName: process.env.DYNAMODB_TABLE_NAME,
-            Item: marshall({
-                ...body,
-                price: numericPrice, // Store the price as a number in DynamoDB
-                currency, // Store the currency in DynamoDB
-            }),
+            Item: marshall(body || {}),
         };
         const createResult = await db.send(new PutItemCommand(params));
 

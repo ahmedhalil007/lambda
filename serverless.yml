@@ -95,10 +95,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: productId
             AttributeType: S
-          - AttributeName: price
-            AttributeType: N
-          - AttributeName: currency
-            AttributeType: S 
         KeySchema:
           - AttributeName: productId
             KeyType: HASH
