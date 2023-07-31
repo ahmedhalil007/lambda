@@ -1,4 +1,5 @@
 const db = require("./db");
+const axios = require('axios'); 
 const {
     GetItemCommand,
     PutItemCommand,
@@ -8,23 +9,32 @@ const {
 } = require("@aws-sdk/client-dynamodb");
 const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 
+
 const getProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
+        const { productId, currency } = event.pathParameters;
         const params = {
             TableName: process.env.DYNAMODB_TABLE_NAME,
-            Key: marshall({ productId: event.pathParameters.productId }),
+            Key: marshall({ productId }),
         };
         const { Item } = await db.send(new GetItemCommand(params));
 
         console.log({ Item });
-        const { productId, title, description, price } = unmarshall(Item);
+        const { title, description, price } = unmarshall(Item);
+
+        // Fetch currency exchange rate using the FastForex API
+        const apiKey = '54518be503-59af10a10f-ryii2r'; // Replace with your actual FastForex API key
+        const exchangeRateResponse = await axios.get(`https://api.fastforex.io/convert?from=USD&to=${currency}&amount=${price}&apikey=${apiKey}`);
+        const convertedPrice = exchangeRateResponse.data.result;
+
         const orderedProduct = {
             productId,
             title,
             description,
-            price,
+            price: convertedPrice,
+            currency, // Add the user-specified currency information to the response
         };
         response.body = JSON.stringify({
             message: "Successfully retrieved product.",
@@ -43,6 +53,7 @@ const getProduct = async (event) => {
 
     return response;
 };
+
 
 const createProduct = async (event) => {
     const response = { statusCode: 200 };
