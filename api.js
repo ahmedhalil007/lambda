@@ -41,7 +41,12 @@ const getProduct = async (event) => {
                         description,
                         price: convertedPrice,
                     },
-                    rawData: Item,
+                    rawData: {
+                        productId,
+                        title,
+                        description,
+                        price: convertedPrice,
+                    },
                 });
             } catch (error) {
                 console.error(error);
