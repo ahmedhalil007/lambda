@@ -12,25 +12,59 @@ const getProduct = async (event) => {
     const response = { statusCode: 200 };
 
     try {
+        const { productId: productIdParam } = event.pathParameters;
+        const { currency } = event.queryStringParameters || {};
+
         const params = {
             TableName: process.env.DYNAMODB_TABLE_NAME,
-            Key: marshall({ productId: event.pathParameters.productId }),
+            Key: marshall({ productId: productIdParam }),
         };
+
         const { Item } = await db.send(new GetItemCommand(params));
 
         console.log({ Item });
         const { productId, title, description, price } = unmarshall(Item);
-        const orderedProduct = {
-            productId,
-            title,
-            description,
-            price,
-        };
-        response.body = JSON.stringify({
-            message: "Successfully retrieved product.",
-            data: orderedProduct,
-            rawData: Item,
-        });
+
+        // Perform currency conversion if the "currency" query parameter is present
+        if (currency) {
+            try {
+                // Replace "YOUR_FOREX_API_KEY" with your actual API key from the Forex API provider
+                const forexApiUrl = `https://api.fastforex.io/convert?api_key=54518be503-59af10a10f-ryii2r&from=EUR&to=${currency}&amount=${price}`;
+                const forexResponse = await axios.get(forexApiUrl);
+                const convertedPrice = forexResponse.data.result;
+
+                response.body = JSON.stringify({
+                    message: "Successfully retrieved product.",
+                    data: {
+                        productId,
+                        title,
+                        description,
+                        price: convertedPrice,
+                    },
+                    rawData: Item,
+                });
+            } catch (error) {
+                console.error(error);
+                response.statusCode = 500;
+                response.body = JSON.stringify({
+                    message: "Failed to convert currency.",
+                    errorMsg: error.message,
+                    errorStack: error.stack,
+                });
+            }
+        } else {
+            // If no currency parameter provided, return the product in EUR
+            response.body = JSON.stringify({
+                message: "Successfully retrieved product.",
+                data: {
+                    productId,
+                    title,
+                    description,
+                    price,
+                },
+                rawData: Item,
+            });
+        }
     } catch (e) {
         console.error(e);
         response.statusCode = 500;
