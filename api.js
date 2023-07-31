@@ -34,15 +34,26 @@ const getProduct = async (event) => {
                 const forexResponse = await axios.get(forexApiUrl);
                 const convertedPrice = forexResponse.data.result;
 
+                // Update rawData with the converted price
+                const rawData = {
+                    productId: { S: productIdParam },
+                    title: { S: title },
+                    description: { S: description },
+                    price: { N: convertedPrice.toFixed(2) }, // Assuming the converted price is a number
+                };
+
                 response.body = JSON.stringify({
                     message: "Successfully retrieved product.",
                     data: {
                         productId,
                         title,
                         description,
-                        price: convertedPrice,
+                        price: {
+                            [currency]: parseFloat(convertedPrice.toFixed(2)),
+                            rate: forexResponse.data.rate,
+                        },
                     },
-                    rawData: Item,
+                    rawData: rawData,
                 });
             } catch (error) {
                 console.error(error);
@@ -78,6 +89,7 @@ const getProduct = async (event) => {
 
     return response;
 };
+
 
 const createProduct = async (event) => {
     const response = { statusCode: 200 };
