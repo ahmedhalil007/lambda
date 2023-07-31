@@ -30,31 +30,31 @@ const getProduct = async (event) => {
         if (currency) {
             try {
                 // Replace "YOUR_FOREX_API_KEY" with your actual API key from the Forex API provider
-                const forexApiUrl = `https://api.fastforex.io/convert?api_key=54518be503-59af10a10f-ryii2r&from=EUR&to=${currency}&amount=${price}`;
+                const forexApiUrl = `https://api.fastforex.io/convert?api_key=YOUR_FOREX_API_KEY&from=EUR&to=${currency}&amount=${price}`;
                 const forexResponse = await axios.get(forexApiUrl);
-                const convertedPrice = forexResponse.data.result;
+                const convertedPrice = parseFloat(forexResponse.data.result);
 
-                // Update rawData with the converted price
-                const rawData = {
-                    productId: { S: productIdParam },
-                    title: { S: title },
-                    description: { S: description },
-                    price: { N: convertedPrice.toFixed(2) }, // Assuming the converted price is a number
-                };
-
-                response.body = JSON.stringify({
-                    message: "Successfully retrieved product.",
-                    data: {
-                        productId,
-                        title,
-                        description,
-                        price: {
-                            [currency]: parseFloat(convertedPrice.toFixed(2)),
-                            rate: forexResponse.data.rate,
+                if (!isNaN(convertedPrice)) {
+                    response.body = JSON.stringify({
+                        message: "Successfully retrieved product.",
+                        data: {
+                            productId,
+                            title,
+                            description,
+                            price: {
+                                [currency]: convertedPrice,
+                                rate: forexResponse.data.rate,
+                            },
                         },
-                    },
-                    rawData: rawData,
-                });
+                        rawData: Item,
+                    });
+                } else {
+                    response.statusCode = 500;
+                    response.body = JSON.stringify({
+                        message: "Failed to convert currency.",
+                        errorMsg: "Invalid conversion result.",
+                    });
+                }
             } catch (error) {
                 console.error(error);
                 response.statusCode = 500;
