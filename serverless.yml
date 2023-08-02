@@ -24,10 +24,6 @@ functions:
       - http:
           path: halilovic-product/{productId}
           method: GET
-          request:
-           parameters:
-              querystrings:
-                currency: true
     iamRoleStatements:
       - Effect: "Allow"
         Action:

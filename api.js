@@ -25,6 +25,7 @@ const getProduct = async (event) => {
 
         console.log({ Item });
         const { productId, title, description, price } = unmarshall(Item);
+        const NumPrice = parseFloat(price);
 
         // Perform currency conversion if the "currency" query parameter is present
         if (currency) {
@@ -65,7 +66,9 @@ const getProduct = async (event) => {
                     productId,
                     title,
                     description,
-                    price,
+                    price: {
+                        EUR: NumPrice.toFixed(2), 
+                    },
                 },
                 rawData: Item,
             });
@@ -88,6 +91,16 @@ const createProduct = async (event) => {
 
     try {
         const body = JSON.parse(event.body);
+
+        if (isNaN(body.price)) {
+            response.statusCode = 400;
+            response.body = JSON.stringify({
+                message: "Invalid format for price. Please enter a valid number.",
+            });
+            return response;
+        }
+
+        body.price = parseFloat(body.price);
         const params = {
             TableName: process.env.DYNAMODB_TABLE_NAME,
             Item: marshall(body || {}),
@@ -116,6 +129,16 @@ const updateProduct = async (event) => {
 
     try {
         const body = JSON.parse(event.body);
+
+        if (isNaN(body.price)) {
+            response.statusCode = 400;
+            response.body = JSON.stringify({
+                message: "Invalid format for price. Please enter a valid number.",
+            });
+            return response;
+        }
+        
+        body.price = parseFloat(body.price);
         const objKeys = Object.keys(body);
         const params = {
             TableName: process.env.DYNAMODB_TABLE_NAME,
