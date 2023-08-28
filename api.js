@@ -42,12 +42,7 @@ const getProduct = async (event) => {
                         description,
                         price: convertedPrice,
                     },
-                    rawData: {
-                        productId,
-                        title,
-                        description,
-                        price: convertedPrice,
-                    },
+                    rawData: Item,
                 });
             } catch (error) {
                 console.error(error);
@@ -120,7 +115,7 @@ const createProduct = async (event) => {
             errorStack: e.stack,
         });
     }
-
+    
     return response;
 };
 
@@ -211,7 +206,9 @@ const getAllProducts = async () => {
                 productId,
                 title,
                 description,
-                price,
+                price: {
+                    EUR: price.toFixed(2), 
+                },
             };
         });
         response.body = JSON.stringify({
